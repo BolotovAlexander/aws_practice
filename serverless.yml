@@ -1,4 +1,4 @@
-service: bolotov-e-shop
+service: el-tools
 
 frameworkVersion: "3"
 
@@ -19,7 +19,7 @@ plugins:
 
 custom:
   client:
-    bucketName: bolotov-e-shop
+    bucketName: el-tools
     distributionFolder: dist
   s3BucketName: ${self:custom.client.bucketName}
 
@@ -38,11 +38,14 @@ resources:
         BucketName: ${self:custom.s3BucketName}
         PublicAccessBlockConfiguration:
           BlockPublicAcls: false
+        OwnershipControls:
+          Rules:
+            - ObjectOwnership: ObjectWriter
         WebsiteConfiguration:
           IndexDocument: index.html
           ErrorDocument: index.html
-        # VersioningConfiguration:
-        #   Status: Enabled
+        VersioningConfiguration:
+          Status: Enabled
 
     ## Specifying the policies to make sure all files inside the Bucket are avaialble to CloudFront
     WebAppS3BucketPolicy:
@@ -52,19 +55,16 @@ resources:
           Ref: WebAppS3Bucket
         PolicyDocument:
           Statement:
-            - Sid: "AllowCloudFrontServicePrincipal"
+            - Sid: "AllowCloudFrontAccessIdentity"
               Effect: Allow
               Action: s3:GetObject
               Resource: arn:aws:s3:::${self:custom.s3BucketName}/*
               Principal:
-                Service: "cloudfront.amazonaws.com"
-              Condition:
-                StringEquals:
-                  AWS:SourceArn:
-                    Fn::Sub:
-                      - "arn:aws:cloudfront::${AWS::AccountId}:distribution/${DistributionId}"
-                      - DistributionId: !Ref OriginAccessIdentity 
-    
+                AWS:
+                  Fn::Join:
+                    - " "
+                    - - "arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity"
+                      - !Ref OriginAccessIdentity
 
     OriginAccessIdentity:
       Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
