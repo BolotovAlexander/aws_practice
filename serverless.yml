@@ -52,25 +52,19 @@ resources:
           Ref: WebAppS3Bucket
         PolicyDocument:
           Statement:
-            - Sid: "AllowPublicAccess"
-              Action:
-                - s3:ListBucket
-                - s3:GetObject
-              Resource:
-                - arn:aws:s3:::${self:custom.s3BucketName}/*
-                - arn:aws:s3:::${self:custom.s3BucketName}
-              Effect: Allow
-              Principal: '*'
-            - Sid: "AllowCloudFrontAccessIdentity"
+            - Sid: "AllowCloudFrontServicePrincipal"
               Effect: Allow
               Action: s3:GetObject
               Resource: arn:aws:s3:::${self:custom.s3BucketName}/*
               Principal:
-                AWS:
-                  Fn::Join:
-                    - " "
-                    - - "arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity"
-                      - !Ref OriginAccessIdentity
+                Service: "cloudfront.amazonaws.com"
+              Condition:
+                StringEquals:
+                  AWS:SourceArn:
+                    Fn::Sub:
+                      - "arn:aws:cloudfront::${AWS::AccountId}:distribution/${DistributionId}"
+                      - DistributionId: !Ref OriginAccessIdentity 
+    
 
     OriginAccessIdentity:
       Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
@@ -101,6 +95,7 @@ resources:
           # Aliases:
           # - mysite.example.com
           DefaultRootObject: index.html
+          Comment: automatically generated
           ## Since the Single Page App is taking care of the routing we need to make sure ever path is served with index.html
           ## The only exception are files that actually exist e.h. app.js, reset.css
           CustomErrorResponses:
