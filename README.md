@@ -1,4 +1,9 @@
-# React-shop-cloudfront
+# Oleksandr Bolotov
+## React-shop-cloudfront
+
+### Links to training sites:
+- [S3](https://bolotov-e-shop.s3.eu-west-1.amazonaws.com/index.html)
+- [CloudFront](https://d2vzmbbsdsr75y.cloudfront.net/)
 
 This is frontend starter project for nodejs-aws mentoring program. It uses the following technologies:
 
