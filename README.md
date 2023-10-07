@@ -2,6 +2,7 @@
 ## React-shop-cloudfront "el-tools"
 
 ### Links to training sites:
+### T2
 - [S3](https://el-tools.s3.eu-west-1.amazonaws.com/index.html)
 - [CloudFront](https://d3uu7iwkyr8lyt.cloudfront.net/)
 
