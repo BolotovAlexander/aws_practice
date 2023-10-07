@@ -1,4 +1,9 @@
-# React-shop-cloudfront
+# Oleksandr Bolotov
+## React-shop-cloudfront "el-tools"
+
+### Links to training sites:
+- [S3](https://el-tools.s3.eu-west-1.amazonaws.com/index.html)
+- [CloudFront](https://d3uu7iwkyr8lyt.cloudfront.net/)
 
 This is frontend starter project for nodejs-aws mentoring program. It uses the following technologies:
 
