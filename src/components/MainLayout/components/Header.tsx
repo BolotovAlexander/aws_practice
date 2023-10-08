@@ -33,7 +33,7 @@ export default function Header() {
             underline="none"
             to="/"
           >
-            My e-shop!
+            My electric tools shop!
           </Link>
         </Typography>
 
