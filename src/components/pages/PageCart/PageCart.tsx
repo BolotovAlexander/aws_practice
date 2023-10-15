@@ -82,7 +82,6 @@ export default function PageCart() {
     setAddress(values);
     handleNext();
   };
-
   return (
     <PaperLayout>
       <Typography component="h1" variant="h4" align="center">

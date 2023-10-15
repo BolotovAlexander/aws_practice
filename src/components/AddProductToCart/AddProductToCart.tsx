@@ -31,7 +31,6 @@ export default function AddProductToCart({ product }: AddProductToCartProps) {
       );
     }
   };
-
   return cartItem ? (
     <>
       <IconButton disabled={isFetching} onClick={removeProduct} size="large">
