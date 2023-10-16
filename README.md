@@ -1,10 +1,12 @@
 # Oleksandr Bolotov
-## React-shop-cloudfront "el-tools"
+## "electric-tools-shop"
 
-### Links to training sites:
-### T2
-- [S3](https://el-tools.s3.eu-west-1.amazonaws.com/index.html)
-- [CloudFront](https://d3uu7iwkyr8lyt.cloudfront.net/)
+### Links:
+- [S3](https://electric-tools-shop2.s3.eu-west-1.amazonaws.com/index.html)
+- [CloudFront](https://d3lwk5qdu0zzwq.cloudfront.net/) link to the shop
+- [Swagger](https://f64qrzoas6.execute-api.eu-west-1.amazonaws.com/swagger)
+- [BE repository](https://github.com/BolotovAlexander/aws_practice_BE)
+
 
 This is frontend starter project for nodejs-aws mentoring program. It uses the following technologies:
 
