@@ -3,13 +3,18 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import axios from "axios";
 
+enum ErrorCode {
+  Forbidden = 403,
+  Unauthorized = 401,
+}
+
 type CSVFileImportProps = {
   url: string;
   title: string;
 };
 
 export default function CSVFileImport({ url, title }: CSVFileImportProps) {
-  const [file, setFile] = React.useState<File | null>();
+  const [file, setFile] = React.useState<File>();
 
   const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -24,25 +29,51 @@ export default function CSVFileImport({ url, title }: CSVFileImportProps) {
   };
 
   const uploadFile = async () => {
-    if(file){
+    console.log("uploadFile to", url);
+
+    if (!file) {
+      return;
+    }
+
+
+    try {
+      const authToken = localStorage.getItem("authorization_token");
+      const headers = {
+        ...(authToken && {
+          Authorization: `Basic ${authToken}`,
+        }),
+      };
       const response = await axios({
         method: "GET",
         url,
         params: {
           name: encodeURIComponent(file.name),
         },
+        headers,
       });
-      console.log("File to upload: ", file.name);
+      console.log("File to upload: ", file?.name);
       console.log("Uploading to: ", response.data);
       const result = await fetch(response.data, {
         method: "PUT",
         body: file,
       });
       console.log("Result: ", result);
-      setFile(null);
+      setFile(undefined);
+    } catch (e) {
+      if (axios.isAxiosError(e)) {
+        switch (e?.response?.status) {
+          case ErrorCode.Unauthorized:
+            alert("User is not authorized");
+            break;
+          case ErrorCode.Forbidden:
+            alert("Authorization is not passed");
+            break;
+          default:
+            throw e;
+        }
+      }
     }
   };
-  
   return (
     <Box>
       <Typography variant="h6" gutterBottom>
