@@ -1,4 +1,4 @@
-import React from "react";
+import { useState } from "react";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import axios from "axios";
@@ -14,7 +14,7 @@ type CSVFileImportProps = {
 };
 
 export default function CSVFileImport({ url, title }: CSVFileImportProps) {
-  const [file, setFile] = React.useState<File>();
+  const [file, setFile] = useState<File | null>(null);
 
   const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -25,24 +25,23 @@ export default function CSVFileImport({ url, title }: CSVFileImportProps) {
   };
 
   const removeFile = () => {
-    setFile(undefined);
+    setFile(null);
   };
 
   const uploadFile = async () => {
     console.log("uploadFile to", url);
 
-    if (!file) {
-      return;
-    }
-
+    if (!file) return;
 
     try {
       const authToken = localStorage.getItem("authorization_token");
+     
       const headers = {
         ...(authToken && {
           Authorization: `Basic ${authToken}`,
         }),
       };
+
       const response = await axios({
         method: "GET",
         url,
@@ -51,15 +50,19 @@ export default function CSVFileImport({ url, title }: CSVFileImportProps) {
         },
         headers,
       });
+
       console.log("File to upload: ", file?.name);
       console.log("Uploading to: ", response.data);
+
       const result = await fetch(response.data, {
         method: "PUT",
         body: file,
       });
+
       console.log("Result: ", result);
-      setFile(undefined);
+      setFile(null);
     } catch (e) {
+   
       if (axios.isAxiosError(e)) {
         switch (e?.response?.status) {
           case ErrorCode.Unauthorized:
@@ -74,6 +77,7 @@ export default function CSVFileImport({ url, title }: CSVFileImportProps) {
       }
     }
   };
+
   return (
     <Box>
       <Typography variant="h6" gutterBottom>
